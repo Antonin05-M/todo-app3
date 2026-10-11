@@ -14,7 +14,9 @@ todo-app3/
 ├── .gitignore                  # Exclusions Git
 ├── README.md                   # Documentation
 │
-├── api/                        # Service API (Flask + PostgreSQL)
+
+├── api/  # Service API (Flask + PostgreSQL)
+
 │   ├── Dockerfile              # Image Python 3.11 + Flask
 │   ├── requirements.txt        # Dépendances (flask, psycopg2, requests, flask-cors)
 │   ├── app.py                  # Routes: GET/POST/PUT /tasks
