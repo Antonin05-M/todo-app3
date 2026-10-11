@@ -6,7 +6,7 @@ Application multi-services avec gestion des statuts des tâches (À faire / En c
 
 ## Structure
 
-todo-app2/
+todo-app3/
 ├── docker-compose.yml          # Orchestration (4 services, réseau app-network-2)
 ├── .env.example                # Variables d'environnement par défaut
 ├── .gitignore                  # Exclusions Git
@@ -29,7 +29,7 @@ todo-app2/
 ├── index.html              # HTML/JS/CSS (gestion des statuts)
 └── .dockerignore
 
-## Fux de données
+## Flux de données
 
 Utilisateur (Navigateur)
 ↓ HTTP (8081)
@@ -88,4 +88,5 @@ Les données sont stockées dans un volume Docker nommé (postgres_data). Elles 
 
 ## Vérifier que tous les services sont up-healthy, et les logs
 
-docker compose ps docker compose logs XXXXX
+docker compose ps 
+docker compose logs XXXXX
