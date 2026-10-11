@@ -3,6 +3,7 @@
 ## Description
 
 Application multi-services avec gestion des statuts des tâches (À faire / En cours / Terminée).
+Sympa pour apprendre une stack sur Docker composée de 4 services : Frontend / logger / API / Postgre-DB
 
 ## Structure
 
