@@ -1,0 +1,62 @@
+services:
+  postgres-db:
+    image: postgres:18
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+    networks:
+      - app-network-2
+    restart: unless-stopped
+
+  api:
+    build: ./api
+    container_name: api
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    ports:
+      - "5002:5000"
+    networks:
+      - app-network-2
+    restart: unless-stopped
+
+  logger:
+    build: ./logger
+    container_name: logger
+    ports:
+      - "5003:5001"
+    networks:
+      - app-network-2
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "8081:80"
+    networks:
+      - app-network-2
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network-2:
+    driver: bridge

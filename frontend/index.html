@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo App v2</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5; }
+        h1 { color: #333; text-align: center; }
+        form { display: flex; margin-bottom: 20px; }
+        input { flex: 1; padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 4px 0 0 4px; }
+        button { padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 0 4px 4px 0; cursor: pointer; }
+        button:hover { background: #45a049; }
+        ul { list-style: none; padding: 0; }
+        li { padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-radius: 4px; margin-bottom: 5px; }
+        li:hover { background-color: #f0f0f0; }
+        .task-title { font-size: 16px; flex: 1; }
+        .task-date { color: #666; font-size: 14px; margin-left: 10px; }
+        .empty { color: #666; text-align: center; padding: 20px; }
+        .status-todo { color: #666; }
+        .status-in_progress { color: #FF9800; font-weight: bold; }
+        .status-done { color: #4CAF50; text-decoration: line-through; }
+        .status-icon { margin-right: 8px; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <h1>📋 Todo App v2</h1>
+    <form id="taskForm">
+        <input type="text" id="taskTitle" placeholder="Nouvelle tâche..." required>
+        <button type="submit">Ajouter</button>
+    </form>
+    <ul id="tasks"><li class="empty">Aucune tâche. Ajoutez-en une !</li></ul>
+
+    <script>
+        const statusCycle = ['todo', 'in_progress', 'done'];
+        const statusIcons = { 'todo': '⚪', 'in_progress': '🟡', 'done': '✅' };
+
+        async function loadTasks() {
+            const response = await fetch('http://localhost:5002/tasks');
+            const tasks = await response.json();
+            const ul = document.getElementById('tasks');
+            ul.innerHTML = tasks.length === 0
+                ? '<li class="empty">Aucune tâche. Ajoutez-en une !</li>'
+                : tasks.map(t => `
+                    <li onclick="updateTaskStatus(${t.id}, '${t.status}')">
+                        <span class="status-icon">${statusIcons[t.status] || '⚪'}</span>
+                        <span class="task-title status-${t.status}">${t.title}</span>
+                        <small class="task-date">${new Date(t.created_at).toLocaleString('fr-FR')}</small>
+                    </li>
+                `).join('');
+        }
+
+        async function updateTaskStatus(taskId, currentStatus) {
+            const currentIndex = statusCycle.indexOf(currentStatus);
+            const nextIndex = (currentIndex + 1) % statusCycle.length;
+            const nextStatus = statusCycle[nextIndex];
+            await fetch(`http://localhost:5002/tasks/${taskId}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: nextStatus })
+            });
+            loadTasks();
+        }
+
+        document.getElementById('taskForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('taskTitle').value;
+            await fetch('http://localhost:5002/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title })
+            });
+            document.getElementById('taskTitle').value = '';
+            loadTasks();
+        });
+
+        loadTasks();
+        setInterval(loadTasks, 5000);
+    </script>
+</body>
+</html>
