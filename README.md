@@ -16,37 +16,62 @@ todo-app3/
 ├── .gitignore                  # Exclusions Git
 
 ├── README.md                   # Documentation
+
 │
 
 ├── api/  # Service API (Flask + PostgreSQL)
 
 │   ├── Dockerfile              # Image Python 3.11 + Flask
+
 │   ├── requirements.txt        # Dépendances (flask, psycopg2, requests, flask-cors)
+
 │   ├── app.py                  # Routes: GET/POST/PUT /tasks
+
 │   └── .dockerignore
+
 │
+
 ├── logger/                     # Service Logger (Flask)
+
 │   ├── Dockerfile              # Image Python 3.11
+
 │   ├── requirements.txt        # Dépendance: flask
+
 │   ├── app.py                  # Route: POST /log
+
 │   └── .dockerignore
+
 │
+
 └── frontend/                   # Interface web (Nginx)
+
 ├── Dockerfile              # Image nginx:alpine
+
 ├── index.html              # HTML/JS/CSS (gestion des statuts)
+
 └── .dockerignore
+
 
 ## Flux de données
 
 Utilisateur (Navigateur)
+
 ↓ HTTP (8081)
+
 Frontend (Nginx)
+
 ↓ HTTP (5002) → POST/GET/PUT /tasks
+
 API (Flask)
+
 ↓ PostgreSQL (5432) → CRUD tâches
+
 ↓ HTTP (5003) → POST /log
+
 Logger (Flask)
+
 ↓ Affiche les logs dans le terminal
+
 
 ## Prérequis
 
