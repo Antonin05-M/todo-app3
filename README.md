@@ -10,8 +10,11 @@ Sympa pour apprendre une stack sur Docker composée de 4 services : Frontend / l
 todo-app3/
 
 ├── docker-compose.yml          # Orchestration (4 services, réseau app-network-2)
+
 ├── .env.example                # Variables d'environnement par défaut
+
 ├── .gitignore                  # Exclusions Git
+
 ├── README.md                   # Documentation
 │
 
